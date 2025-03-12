@@ -22,4 +22,3 @@ class ActivateUser(UserViewSet):
         }
 
         return serializer_class(*args, **kwargs)
-

@@ -1,0 +1,23 @@
+uses:
+  - django
+
+pylint:
+  disable:
+    - unused-import
+    - import-outside-toplevel
+    - django-not-configured
+
+pyflakes:
+  disable:
+    - F401
+
+pycodestyle:
+  max-line-length: 300
+
+
+ignore-paths:
+  - .venv
+  - venv
+
+ignore-patterns:
+  - .*migrations
