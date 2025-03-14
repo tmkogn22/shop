@@ -16,4 +16,3 @@ admin.site.register(ProductImage)
 admin.site.register(Cashback)
 admin.site.register(Order)
 admin.site.register(Product, ProductAdmin)
-
