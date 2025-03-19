@@ -1,0 +1,29 @@
+[
+{
+    "model": "catalog.promo",
+    "pk": 1,
+    "fields": {
+        "name": "promo 1",
+        "percent": 100,
+        "is_cumulative": false
+    }
+},
+{
+    "model": "catalog.promo",
+    "pk": 2,
+    "fields": {
+        "name": "promo 2",
+        "percent": 1,
+        "is_cumulative": true
+    }
+},
+{
+    "model": "catalog.promo",
+    "pk": 3,
+    "fields": {
+        "name": "promo 3",
+        "percent": 89,
+        "is_cumulative": true
+    }
+}
+]

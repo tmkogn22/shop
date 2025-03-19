@@ -1,0 +1,23 @@
+[
+{
+    "model": "catalog.brand",
+    "pk": 1,
+    "fields": {
+        "name": "brand 1"
+    }
+},
+{
+    "model": "catalog.brand",
+    "pk": 2,
+    "fields": {
+        "name": "brand 2"
+    }
+},
+{
+    "model": "catalog.brand",
+    "pk": 3,
+    "fields": {
+        "name": "brand 3"
+    }
+}
+]
