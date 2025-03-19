@@ -1,0 +1,32 @@
+[
+{
+    "model": "catalog.discount",
+    "pk": 1,
+    "fields": {
+        "name": "discount 1",
+        "start_date": "2025-03-14",
+        "exp_date": "2025-03-14",
+        "percent": 99
+    }
+},
+{
+    "model": "catalog.discount",
+    "pk": 2,
+    "fields": {
+        "name": "discount 2",
+        "start_date": "2025-03-14",
+        "exp_date": "2025-03-14",
+        "percent": 1
+    }
+},
+{
+    "model": "catalog.discount",
+    "pk": 3,
+    "fields": {
+        "name": "discount 3",
+        "start_date": "2025-03-14",
+        "exp_date": "2025-03-14",
+        "percent": 50
+    }
+}
+]

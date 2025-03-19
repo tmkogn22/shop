@@ -1,0 +1,55 @@
+[
+{
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+        "name": "radio",
+        "article": "ji23o12iqjefnw",
+        "description": "radio",
+        "price": "100000.00",
+        "release_date": "2025-03-14",
+        "stock_amount": 9,
+        "brand": 1,
+        "category": 1,
+        "discount": [
+            2
+        ]
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+        "name": "chair",
+        "article": "r2ed",
+        "description": "chair",
+        "price": "90.00",
+        "release_date": "2025-03-14",
+        "stock_amount": 1,
+        "brand": 2,
+        "category": 3,
+        "discount": [
+            1,
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+        "name": "flour",
+        "article": "23eqwdas",
+        "description": "flour",
+        "price": "1.00",
+        "release_date": "2025-03-14",
+        "stock_amount": 707,
+        "brand": 3,
+        "category": 3,
+        "discount": [
+            3
+        ]
+    }
+}
+]
