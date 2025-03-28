@@ -3,7 +3,6 @@ from catalog.views import (CategoryListView, CashbackView, DiscountListView, Pro
                            DiscountProducts, CartView)
 
 
-
 urlpatterns = [
     path('categories/', CategoryListView.as_view(), name='categories'),
     path('cashback/', CashbackView.as_view(), name='cashback'),

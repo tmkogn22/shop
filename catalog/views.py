@@ -1,12 +1,13 @@
 from django.shortcuts import render
-from django.db.models import F
+from django.db.models import F, Prefetch
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from catalog.models import Category, Cashback, Discount, Promo, Product
+from catalog.models import Category, Cashback, Discount, Promo, Product, Cart
 from catalog.serializers import (CategorySerializer, CashbackSerializer, DiscountSerializer, PromoSerializer,
-                                 ProductSerializer, DiscountProductsSerializer)
+                                 ProductSerializer, DiscountProductsSerializer, AddProductSerializer, CartSerializer,
+                                 DeleteProductSerializer)
 
 
 class CategoryListView(ListAPIView):
@@ -62,4 +63,33 @@ class CartView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        return Response({'msg': 'hi'})
+        user = request.user
+        cart_item = Product.objects.prefetch_related(Prefetch('discount', queryset=Discount.objects.only('percent'))).filter(
+            cart__user=user
+        ).annotate(amount=F('cart__amount'))
+        serializer = CartSerializer({'products': cart_item})
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        input_serializer = AddProductSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        product = Product.objects.get(id=input_serializer.data['product_id'])
+        cart_item, _ = Cart.objects.get_or_create(user=request.user, product=product)
+
+        if not cart_item.amount:
+            cart_item.amount = input_serializer.data['amount']
+        else:
+            cart_item.amount += input_serializer.data['amount']
+
+        cart_item.save()
+
+        return Response()
+
+    def delete(self, request):
+        input_serializer = DeleteProductSerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+        product = Product.objects.get(id=input_serializer.data['product_id'])
+        Cart.objects.get(user=request.user, product=product).delete()
+
+        return Response()
