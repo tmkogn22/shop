@@ -56,3 +56,10 @@ class DiscountProducts(APIView):
                                                                                         'discount__percent'))
         serializer = DiscountProductsSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class CartView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        return Response({'msg': 'hi'})
