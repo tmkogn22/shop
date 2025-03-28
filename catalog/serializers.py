@@ -48,3 +48,31 @@ class DiscountProductsSerializer(serializers.Serializer):
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     article = serializers.CharField()
     discount_percent = serializers.IntegerField()
+
+
+class AddProductSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
+    amount = serializers.IntegerField()
+
+
+class DiscountsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = ('percent', )
+
+
+class ProductInCartSerializer(serializers.ModelSerializer):
+    amount = serializers.IntegerField()
+    discounts = DiscountsSerializer(source='discount', many=True)
+
+    class Meta:
+        model = Product
+        fields = ('name', 'price', 'amount', 'discounts')
+
+
+class CartSerializer(serializers.Serializer):
+    products = ProductInCartSerializer(many=True)
+
+
+class DeleteProductSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
