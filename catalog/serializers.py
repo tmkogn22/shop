@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from catalog.models import Category, Cashback, Discount, Promo, Product, ProductImage
+from catalog.models import Category, Cashback, Discount, Promo, Product, ProductImage, Order, OrderProductsM2M
+from datetime import date
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -31,7 +32,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImage
-        fields = ('image', )
+        fields = ('image',)
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -58,7 +59,7 @@ class AddProductSerializer(serializers.Serializer):
 class DiscountsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        fields = ('percent', )
+        fields = ('percent',)
 
 
 class ProductInCartSerializer(serializers.ModelSerializer):
@@ -76,3 +77,51 @@ class CartSerializer(serializers.Serializer):
 
 class DeleteProductSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
+
+
+class OrderProductsM2MSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderProductsM2M
+        fields = ('product', 'amount')
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    promo = serializers.CharField(max_length=300, write_only=True)
+    products = OrderProductsM2MSerializer(many=True, write_only=True)
+
+    class Meta:
+        model = Order
+        fields = ('id', 'created', 'total_price', 'status',
+                  'payment_status', 'delivery_method', 'notification_time', 'products', 'promo')
+        read_only_fields = ('created', 'status', 'payment_status', 'total_price')
+
+    def create(self, validated_data):
+        products = validated_data.pop('products')
+        promo_name = validated_data.pop('promo')
+        promo = Promo.objects.filter(name=promo_name).first()
+
+        total_sum = 0
+
+        for item in products:
+            product = item.get('product')
+            amount = item.get('amount')
+            discounts = Discount.objects.prefetch_related('product_set').filter(product__id=product.id)
+            current_date = date.today()
+            discount_percents = []
+            for disc in discounts:
+                delta = current_date - disc.exp_date
+                if delta.days <= 0:
+                    discount_percents.append(disc.percent)
+            total_discount = sum(discount_percents) if len(discount_percents) > 0 else 0
+            total_sum += (product.price * (100 - total_discount) / 100) * amount
+
+        if promo.is_cumulative:
+            total_sum *= ((100 - promo.percent) / 100)
+
+        user = self.context['request'].user
+        order = Order.objects.create(total_price=total_sum, user=user, **validated_data)
+
+        for product in products:
+            OrderProductsM2M.objects.create(order=order, **product)
+
+        return order

@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from catalog.models import Category, Cashback, Discount, Promo, Product, Cart
 from catalog.serializers import (CategorySerializer, CashbackSerializer, DiscountSerializer, PromoSerializer,
                                  ProductSerializer, DiscountProductsSerializer, AddProductSerializer, CartSerializer,
-                                 DeleteProductSerializer)
+                                 DeleteProductSerializer, OrderSerializer)
 
 
 class CategoryListView(ListAPIView):
@@ -93,3 +93,13 @@ class CartView(APIView):
         Cart.objects.get(user=request.user, product=product).delete()
 
         return Response()
+
+
+class OrderView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request):
+        input_serializer = OrderSerializer(data=request.data, context={'request': request})
+        input_serializer.is_valid(raise_exception=True)
+        input_serializer.save()
+        return Response(input_serializer.data)
