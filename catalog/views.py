@@ -8,6 +8,7 @@ from catalog.models import Category, Cashback, Discount, Promo, Product, Cart
 from catalog.serializers import (CategorySerializer, CashbackSerializer, DiscountSerializer, PromoSerializer,
                                  ProductSerializer, DiscountProductsSerializer, AddProductSerializer, CartSerializer,
                                  DeleteProductSerializer, OrderSerializer)
+from catalog.tasks import example_task
 
 
 class CategoryListView(ListAPIView):
@@ -41,6 +42,7 @@ class CategoryProductsView(APIView):
     def get(self, request, category_id):
         queryset = Product.objects.filter(category__id=category_id)
         serializer = ProductSerializer(queryset, many=True)
+        example_task.delay()
         return Response(serializer.data)
 
 
