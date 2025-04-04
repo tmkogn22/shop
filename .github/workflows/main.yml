@@ -22,6 +22,11 @@ jobs:
         run: |
           echo "${{secrets.ENV_FILE}}" > shop/.env
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       - name: Run DB
         run: |
           docker-compose -f shop/docker-compose.yml up -d db
