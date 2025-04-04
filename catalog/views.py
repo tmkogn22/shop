@@ -9,6 +9,7 @@ from catalog.serializers import (CategorySerializer, CashbackSerializer, Discoun
                                  ProductSerializer, DiscountProductsSerializer, AddProductSerializer, CartSerializer,
                                  DeleteProductSerializer, OrderSerializer)
 from catalog.tasks import example_task
+from drf_yasg.utils import swagger_auto_schema
 
 
 class CategoryListView(ListAPIView):
@@ -100,6 +101,13 @@ class CartView(APIView):
 class OrderView(APIView):
     permission_classes = (IsAuthenticated, )
 
+    @swagger_auto_schema(
+        request_method='POST',
+        request_body=OrderSerializer,
+        responses={
+            201: OrderSerializer
+        }
+    )
     def post(self, request):
         input_serializer = OrderSerializer(data=request.data, context={'request': request})
         input_serializer.is_valid(raise_exception=True)
