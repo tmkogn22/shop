@@ -1,0 +1,23 @@
+name: DJANGO REST CI
+
+on:
+  push:
+    branches: [ feature/add-ci ]
+  pull_requests:
+    branches: [ feature/add-ci, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Set Up .env
+        run: |
+          echo "${{secrets.ENV_FILE}}" > .env
