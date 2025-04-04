@@ -34,7 +34,7 @@ jobs:
 
       - name: Wait for DB
         run: |
-          until docker exec -t $(docker ps -q -f 'name=shop_db_1') pg_isready -h localhost 5432; 
+          until docker exec -t $(docker ps -q -f 'name=shop_db_1') pg_isready -h shop_db_1 5432; 
             do echo "Waiting for db is ready";
             sleep 5;
           done
