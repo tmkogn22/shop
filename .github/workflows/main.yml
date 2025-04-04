@@ -20,4 +20,4 @@ jobs:
 
       - name: Set Up .env
         run: |
-          echo "${{secrets.ENV_FILE}}" > .env
+          echo "${{secrets.ENV_FILE}}" > shop/env
