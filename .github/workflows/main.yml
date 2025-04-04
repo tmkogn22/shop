@@ -29,6 +29,7 @@ jobs:
 
       - name: Run DB
         run: |
+          ls
           docker-compose -f shop/docker-compose.yml up -d db
 
       - name: Wait for DB
